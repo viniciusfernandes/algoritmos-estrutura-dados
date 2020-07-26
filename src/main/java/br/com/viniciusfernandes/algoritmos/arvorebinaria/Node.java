@@ -1,4 +1,4 @@
-package br.com.viniciusfernandes.algoritmos;
+package br.com.viniciusfernandes.algoritmos.arvorebinaria;
 
 public class Node {
 	public Node left;
