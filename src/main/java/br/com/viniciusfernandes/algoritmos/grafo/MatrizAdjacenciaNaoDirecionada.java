@@ -5,22 +5,26 @@ import java.util.List;
 
 public class MatrizAdjacenciaNaoDirecionada {
 	private final int[][] nodes;
+	private final int size;
+
+	private boolean visitados[] = null;
 
 	public MatrizAdjacenciaNaoDirecionada(int size) {
 		nodes = new int[size][size];
+		this.size = size;
 	}
 
 	public MatrizAdjacenciaNaoDirecionada add(int a, int b) {
-		if (a > 5 || b > 5) {
-			throw new IllegalArgumentException("Os parametros a, b devem ser menores do que 6");
+		if (a < 0 || a > size || b < 0 || b > size) {
+			throw new IllegalArgumentException("Os parametros a, b devem estar entre 1 e " + size);
 		}
 		nodes[a - 1][b - 1] = nodes[b - 1][a - 1] = 1;
 		return this;
 	}
 
 	public Integer[] getAdjacentes(int i) {
-		if (i <= 0 || i > 5) {
-			throw new IllegalArgumentException("O parametro i deve ser estar entre 1 e 5");
+		if (i <= 0 || i > size) {
+			throw new IllegalArgumentException("O parametro i deve ser estar entre 1 e " + size);
 		}
 		i--;
 		final List<Integer> adj = new ArrayList<>(nodes[i].length);
@@ -30,6 +34,10 @@ public class MatrizAdjacenciaNaoDirecionada {
 			}
 		}
 		return adj.toArray(new Integer[] {});
+	}
+
+	public boolean isAdjecente(int a, int b) {
+		return nodes[a - 1][b - 1] == 1;
 	}
 
 	@Override
@@ -52,8 +60,8 @@ public class MatrizAdjacenciaNaoDirecionada {
 	}
 
 	public String toString(int i) {
-		if (i > 5) {
-			throw new IllegalArgumentException("Os parametros i devem ser menor do que 6");
+		if (i <= 0 || i > size) {
+			throw new IllegalArgumentException("O parametro i deve ser estar entre 1 e " + size);
 		}
 		final StringBuilder s = new StringBuilder();
 		final int last = nodes[i].length - 1;
@@ -64,5 +72,26 @@ public class MatrizAdjacenciaNaoDirecionada {
 			}
 		}
 		return s.toString();
+	}
+
+	public void visit() {
+		visit(3);
+	}
+
+	private void visit(int i) {
+		if (visitados == null) {
+			if (i <= 0 || i > size) {
+				throw new IllegalArgumentException("O parametro i deve ser estar entre 1 e " + size);
+			}
+			visitados = new boolean[nodes.length];
+			i--;
+		}
+		visitados[i] = true;
+		System.out.println("Visitado: " + (i + 1));
+		for (int j = 0; j < size; j++) {
+			if (nodes[i][j] == 1 && !visitados[j]) {
+				visit(j);
+			}
+		}
 	}
 }

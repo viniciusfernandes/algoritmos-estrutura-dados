@@ -47,4 +47,9 @@ public class MatrizAdjacenciaNaoDirecionadaTest {
 		}, matriz.getAdjacentes(5));
 	}
 
+	@Test
+	public void testVisiting() {
+		matriz.visit();
+	}
+
 }
