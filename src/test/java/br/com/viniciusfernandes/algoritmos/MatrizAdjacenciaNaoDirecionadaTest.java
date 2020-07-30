@@ -49,7 +49,15 @@ public class MatrizAdjacenciaNaoDirecionadaTest {
 
 	@Test
 	public void testVisiting() {
-		matriz.visit();
+		matriz.visitInDepth();
 	}
 
+	@Test
+	public void testVisitInLarge() {
+		matriz = new MatrizAdjacenciaNaoDirecionada(10);
+		matriz.add(1, 2).add(1, 3).add(1, 4);
+		matriz.add(2, 5).add(3, 6).add(3, 7).add(4, 8);
+		matriz.add(5, 9).add(6, 10);
+		matriz.visitInLarge();
+	}
 }

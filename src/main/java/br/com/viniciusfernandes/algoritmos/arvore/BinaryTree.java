@@ -1,18 +1,11 @@
-package br.com.viniciusfernandes.algoritmos.arvorebinaria;
+package br.com.viniciusfernandes.algoritmos.arvore;
 
-public class Tree {
-	public static void main(String... c) {
-		final Tree t = new Tree();
-		t.add(8).add(3).add(1).add(6).add(4).add(7).add(10).add(14).add(13);
-
-		t.remove(6);
-		assert !"8 3 1 7 4 10 14 13".equals(t.toString());
-	}
+public class BinaryTree {
 
 	private int length = 0;
 	private Node root;
 
-	public Tree add(int value) {
+	public BinaryTree add(int value) {
 		final Node node = new Node(value);
 		length++;
 		if (root == null) {
@@ -61,7 +54,7 @@ public class Tree {
 
 	}
 
-	public Tree remove(int value) {
+	public BinaryTree remove(int value) {
 		if (root == null) {
 			return this;
 		}
@@ -184,5 +177,20 @@ public class Tree {
 		final StringBuilder string = new StringBuilder();
 		generateString(root, string);
 		return string.substring(0, string.length() - 1);
+	}
+}
+
+class Node {
+	public Node left;
+	public Node right;
+	int value;
+
+	public Node(int value) {
+		this.value = value;
+	}
+
+	@Override
+	public String toString() {
+		return "{value:" + value + ", letft:" + (left != null ? left.value : null) + ", right:" + (right != null ? right.value : null) + "}";
 	}
 }

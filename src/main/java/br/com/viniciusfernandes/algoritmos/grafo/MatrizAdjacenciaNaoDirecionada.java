@@ -1,10 +1,14 @@
 package br.com.viniciusfernandes.algoritmos.grafo;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 public class MatrizAdjacenciaNaoDirecionada {
 	private final int[][] nodes;
+	private Queue<Integer> queue = null;
+
 	private final int size;
 
 	private boolean visitados[] = null;
@@ -74,11 +78,11 @@ public class MatrizAdjacenciaNaoDirecionada {
 		return s.toString();
 	}
 
-	public void visit() {
-		visit(3);
+	public void visitInDepth() {
+		visitInDepth(3);
 	}
 
-	private void visit(int i) {
+	private void visitInDepth(int i) {
 		if (visitados == null) {
 			if (i <= 0 || i > size) {
 				throw new IllegalArgumentException("O parametro i deve ser estar entre 1 e " + size);
@@ -90,8 +94,39 @@ public class MatrizAdjacenciaNaoDirecionada {
 		System.out.println("Visitado: " + (i + 1));
 		for (int j = 0; j < size; j++) {
 			if (nodes[i][j] == 1 && !visitados[j]) {
-				visit(j);
+				visitInDepth(j);
 			}
+		}
+	}
+
+	public void visitInLarge() {
+		visitInLarge(1);
+	}
+
+	private void visitInLarge(int i) {
+
+		if (queue == null) {
+			if (i <= 0 || i > size) {
+				throw new IllegalArgumentException("O parametro i deve ser estar entre 1 e " + size);
+			}
+			queue = new LinkedList<>();
+			queue.add(--i);
+
+			visitados = new boolean[size];
+			visitados[i] = true;
+		}
+
+		System.out.println("Visitado: " + (i + 1));
+		while (queue.size() > 0) {
+			i = queue.peek();
+			for (int j = 0; j < nodes[i].length; j++) {
+				if (nodes[i][j] == 1 && !visitados[j]) {
+					visitados[j] = true;
+					queue.add(j);
+					System.out.println("Visitado: " + (j + 1));
+				}
+			}
+			queue.poll();
 		}
 	}
 }

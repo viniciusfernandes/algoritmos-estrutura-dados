@@ -5,15 +5,15 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
-import br.com.viniciusfernandes.algoritmos.arvorebinaria.Tree;
+import br.com.viniciusfernandes.algoritmos.arvore.BinaryTree;
 
 public class ArvoreBinariaTest {
 
-	private Tree tree;
+	private BinaryTree tree;
 
 	@Before
 	public void inital() {
-		tree = new Tree();
+		tree = new BinaryTree();
 		tree.add(8).add(3).add(1).add(6).add(4).add(7).add(10).add(14).add(13);
 	}
 
