@@ -24,25 +24,58 @@ public class List<T> {
 		return this;
 	}
 
+	public List<T> add(T obj, int index) {
+		if (index < 0 || index > current) {
+			throw new IllegalArgumentException("O indice deve estar entre 0 e " + current);
+		}
+
+		current++;
+		if (current >= last) {
+			resize();
+		}
+
+		final Object[] copy = new Object[elements.length];
+		for (int i = 0; i < elements.length; i++) {
+			if (i < index) {
+				copy[i] = elements[i];
+				continue;
+			}
+			else if (i == index) {
+				copy[index] = obj;
+				continue;
+			}
+			copy[i] = elements[i - 1];
+		}
+		elements = copy;
+		return this;
+	}
+
 	public void clear() {
 		elements = new Object[elements.length];
 		current = -1;
 	}
 
-	public Object get(int index) {
-		return elements[index];
+	public T get(int index) {
+		return (T) elements[index];
 	}
 
-	public void remove(int index) {
+	public boolean isEmpty() {
+		return size() == 0;
+	}
+
+	public T remove(int index) {
 		if (index < 0 || index > current) {
 			throw new IllegalArgumentException("O indice " + index + " nao existe e nao pode ser removido da lista");
 		}
-		final int max = elements.length - 1;
-		for (int i = index; i < max; i++) {
+		final Object removed = elements[index];
+
+		final int length = elements.length - 1;
+		for (int i = index; i < length; i++) {
 			elements[i] = elements[i + 1];
 		}
 		elements[elements.length - 1] = null;
 		current--;
+		return (T) removed;
 	}
 
 	private void resize() {
@@ -65,4 +98,5 @@ public class List<T> {
 		}
 		return copy;
 	}
+
 }

@@ -28,6 +28,40 @@ public class ListaTest {
 	}
 
 	@Test
+	public void testAdicaoPosicional() {
+		lista.add(4, 2);
+		assertTrue(lista.size() == 6);
+		assertEquals(new Object[] {
+				1, 3, 4, 7, 5, 31
+		}, lista.toArray());
+
+		assertTrue(lista.size() == 6);
+
+	}
+
+	@Test
+	public void testAdicaoPosicionalNoComeco() {
+		lista.add(4, 0);
+		assertTrue(lista.size() == 6);
+		assertEquals(new Object[] {
+				4, 1, 3, 7, 5, 31
+		}, lista.toArray());
+
+		assertTrue(lista.size() == 6);
+	}
+
+	@Test
+	public void testAdicaoPosicionalNoFim() {
+		lista.add(4);
+		assertTrue(lista.size() == 6);
+		assertEquals(new Object[] {
+				1, 3, 7, 5, 31, 4
+		}, lista.toArray());
+
+		assertTrue(lista.size() == 6);
+	}
+
+	@Test
 	public void testLimpeza() {
 		lista.clear();
 		assertTrue(lista.size() == 0);
@@ -66,4 +100,5 @@ public class ListaTest {
 		assertTrue(lista.size() == 0);
 
 	}
+
 }
