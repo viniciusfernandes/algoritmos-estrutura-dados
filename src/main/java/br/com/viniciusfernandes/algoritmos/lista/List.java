@@ -55,6 +55,15 @@ public class List<T> {
 		current = -1;
 	}
 
+	public List<T> copy() {
+		final int length = size();
+		final List<T> cp = new List<>(length);
+		for (int i = 0; i < length; i++) {
+			cp.add(get(i));
+		}
+		return cp;
+	}
+
 	public T get(int index) {
 		return (T) elements[index];
 	}
@@ -98,5 +107,4 @@ public class List<T> {
 		}
 		return copy;
 	}
-
 }

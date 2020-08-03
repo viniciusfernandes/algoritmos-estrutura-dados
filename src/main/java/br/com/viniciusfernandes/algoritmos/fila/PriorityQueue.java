@@ -1,26 +1,22 @@
 package br.com.viniciusfernandes.algoritmos.fila;
 
 import br.com.viniciusfernandes.algoritmos.lista.List;
+import br.com.viniciusfernandes.algoritmos.node.Node;
 
-public class PriorityQueue {
-	private class Node {
-		String label;
-		int prior;
+public abstract class PriorityQueue<T> {
 
-		public Node(String label, int prior) {
-			this.label = label;
+	class Pair {
+		final Node<T> node;
+		final int prior;
+
+		public Pair(Node<T> node, int prior) {
+			this.node = node;
 			this.prior = prior;
 		}
 
-		@Override
-		public String toString() {
-			final StringBuilder s = new StringBuilder();
-			s.append("{label: ").append(label).append(", prior: ").append(prior).append("}");
-			return s.toString();
-		}
 	}
 
-	private final List<Node> queue;
+	private final List<Pair> queue;
 
 	public PriorityQueue() {
 		this(10);
@@ -30,34 +26,46 @@ public class PriorityQueue {
 		queue = new List<>(init);
 	}
 
-	public PriorityQueue clear() {
+	public PriorityQueue<T> clear() {
 		queue.clear();
 		return this;
 	}
 
-	public String pop() {
-		return queue.remove(0).label;
+	abstract boolean isPrior(Pair a, Pair b);
+
+	public Node<T> pop() {
+		return queue.remove(0).node;
 	}
 
-	public PriorityQueue push(String label, int prior) {
-		final Node node = new Node(label, prior);
+	public PriorityQueue<T> push(Node<T> node, int prior) {
+		final Pair pNode = new Pair(node, prior);
+		return push(pNode);
+	}
+
+	private PriorityQueue<T> push(Pair pair) {
+
 		final int size = queue.size();
 		if (size == 0) {
-			queue.add(node);
+			queue.add(pair);
 		}
 		else {
 			boolean ok = false;
 			for (int i = 0; i < size; i++) {
-				if (ok = queue.get(i).prior < prior) {
-					queue.add(node, i);
+				if (ok = isPrior(queue.get(i), pair)) {
+					queue.add(pair, i);
 					break;
 				}
 			}
 			if (!ok) {
-				queue.add(node);
+				queue.add(pair);
 			}
 		}
 		return this;
+	}
+
+	public PriorityQueue<T> push(String nodeId, int prior) {
+		final Pair pair = new Pair(new Node(nodeId), prior);
+		return push(pair);
 	}
 
 	public int size() {

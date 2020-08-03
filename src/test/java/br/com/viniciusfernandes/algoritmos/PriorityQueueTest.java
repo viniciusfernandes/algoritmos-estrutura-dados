@@ -5,15 +5,15 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
-import br.com.viniciusfernandes.algoritmos.fila.PriorityQueue;
+import br.com.viniciusfernandes.algoritmos.fila.MaxPriorityQueue;
 
 public class PriorityQueueTest {
 
-	private PriorityQueue queue;
+	private MaxPriorityQueue queue;
 
 	@Before
 	public void inital() {
-		queue = new PriorityQueue(5);
+		queue = new MaxPriorityQueue(5);
 		queue.push("B", 2).push("A", 1).push("Z", 26).push("H", 8);
 	}
 
@@ -40,10 +40,10 @@ public class PriorityQueueTest {
 
 	@Test
 	public void testOrnecacaoERemocao() {
-		assertTrue(queue.pop().equals("Z"));
-		assertTrue(queue.pop().equals("H"));
-		assertTrue(queue.pop().equals("B"));
-		assertTrue(queue.pop().equals("A"));
+		assertTrue(queue.pop().id.equals("Z"));
+		assertTrue(queue.pop().id.equals("H"));
+		assertTrue(queue.pop().id.equals("B"));
+		assertTrue(queue.pop().id.equals("A"));
 
 		assertTrue(queue.size() == 0);
 	}
