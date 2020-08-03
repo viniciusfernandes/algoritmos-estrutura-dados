@@ -1,7 +1,10 @@
 package br.com.viniciusfernandes.algoritmos.grafo;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import br.com.viniciusfernandes.algoritmos.fila.MinPriorityQueue;
 import br.com.viniciusfernandes.algoritmos.fila.PriorityQueue;
@@ -13,11 +16,47 @@ public class GrafoListaAdjacencia<T> {
 
 	final Map<String, Integer> costMap = new HashMap<>();
 
+	private boolean foundCycle;
+
 	private final Map<String, LinkedNode<T>> table = new HashMap<>();
 
 	public GrafoListaAdjacencia<T> clear() {
 		table.clear();
 		return this;
+	}
+
+	public LinkedNode<T> get(String id) {
+		return table.get(id);
+	}
+
+	public boolean hasCycle() {
+		final Set<String> visited = new HashSet<>();
+		foundCycle = false;
+		for (final Entry<String, LinkedNode<T>> e : table.entrySet()) {
+			hasCycle(e.getValue(), visited);
+			if (foundCycle) {
+				return true;
+			}
+			visited.clear();
+		}
+
+		return false;
+	}
+
+	private void hasCycle(LinkedNode<T> node, Set<String> visited) {
+		if (foundCycle) {
+			return;
+		}
+
+		if (!visited.contains(node.id)) {
+			visited.add(node.id);
+			for (int i = 0; i < node.size(); i++) {
+				hasCycle(get(node.getIdLinkedNode(i)), visited);
+			}
+		}
+		else {
+			foundCycle = true;
+		}
 	}
 
 	public GrafoListaAdjacencia<T> link(Node<T> from, Node<T> to, Integer cost) {

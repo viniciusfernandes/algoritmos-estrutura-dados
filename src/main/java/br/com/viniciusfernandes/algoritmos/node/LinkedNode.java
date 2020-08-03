@@ -25,6 +25,10 @@ public class LinkedNode<T> extends Node<T> {
 		return costs.get(idNode);
 	}
 
+	public String getIdLinkedNode(int index) {
+		return linkedNodes.get(index).id;
+	}
+
 	public Node<T> getLinkedNode(int index) {
 		return linkedNodes.get(index);
 	}

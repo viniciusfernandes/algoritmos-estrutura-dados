@@ -1,6 +1,7 @@
 package br.com.viniciusfernandes.algoritmos;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
@@ -41,6 +42,27 @@ public class GrafoListaAdjacenciaTest {
 		grafo.link(new Node<Integer>("0"), new Node<Integer>("0"), 0);
 
 		assertTrue(grafo.size() == 1);
+	}
+
+	@Test
+	public void testHasCycle() {
+		grafo.clear();
+		grafo.link(new Node<Integer>("0"), new Node<Integer>("1"), 1);
+		grafo.link(new Node<Integer>("1"), new Node<Integer>("2"), 2);
+		grafo.link(new Node<Integer>("2"), new Node<Integer>("0"), 21);
+		grafo.link(new Node<Integer>("2"), new Node<Integer>("3"), 3);
+		grafo.link(new Node<Integer>("2"), new Node<Integer>("4"), 4);
+
+		assertTrue(grafo.hasCycle());
+	}
+
+	@Test
+	public void testHasNoCycle() {
+		grafo.clear();
+		grafo.link(new Node<Integer>("0"), new Node<Integer>("1"), 1);
+		grafo.link(new Node<Integer>("1"), new Node<Integer>("2"), 1);
+
+		assertFalse(grafo.hasCycle());
 	}
 
 	@Test
