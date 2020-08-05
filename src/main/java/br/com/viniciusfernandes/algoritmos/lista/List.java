@@ -87,6 +87,14 @@ public class List<T> {
 		return (T) removed;
 	}
 
+	public List<T> replace(T obj, int index) {
+		if (index < 0 || index > current) {
+			throw new IllegalArgumentException("O indice deve estar entre 0 e " + current);
+		}
+		elements[index] = obj;
+		return this;
+	}
+
 	private void resize() {
 		final Object[] copy = new Object[elements.length * 2];
 		for (int i = 0; i < elements.length; i++) {
