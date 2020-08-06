@@ -9,6 +9,7 @@ import br.com.viniciusfernandes.algoritmos.lista.List;
 
 public class SortTest {
 	private final BubbleSorter<Integer> bubble = new BubbleSorter<>();
+	private final InsertionSorter<Integer> insertion = new InsertionSorter<>();
 	private List<Integer> lista;
 
 	private final SelectionSorter<Integer> selection = new SelectionSorter<>();
@@ -34,6 +35,21 @@ public class SortTest {
 		lista.add(1).add(2).add(3).add(5).add(7).add(31);
 
 		bubble.sort(lista);
+		assertEquals(sortedArray, lista.toArray());
+	}
+
+	@Test
+	public void testInsertionSort() {
+		insertion.sort(lista);
+		assertEquals(sortedArray, lista.toArray());
+	}
+
+	@Test
+	public void testInsertionSortTrivial() {
+		final List<Integer> lista = new List<>();
+		lista.add(1).add(2).add(3).add(5).add(7).add(31);
+
+		insertion.sort(lista);
 		assertEquals(sortedArray, lista.toArray());
 	}
 
