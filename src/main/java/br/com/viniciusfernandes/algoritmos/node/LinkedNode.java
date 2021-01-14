@@ -37,6 +37,10 @@ public class LinkedNode<T> extends Node<T> {
 		return links;
 	}
 
+	public boolean isLinked(String idNode) {
+		return costs.containsKey(idNode);
+	}
+
 	public LinkedNode<T> link(Node<T> node, Integer cost) {
 		linkedNodes.add(node);
 		links.add(new Link<>(this, node, cost));

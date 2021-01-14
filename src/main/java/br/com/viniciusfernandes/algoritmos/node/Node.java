@@ -2,7 +2,11 @@ package br.com.viniciusfernandes.algoritmos.node;
 
 public class Node<T> {
 	public final String id;
-	public final T value;
+	public T value;
+
+	public Node(int id) {
+		this(String.valueOf(id), null);
+	}
 
 	public Node(String id) {
 		this(id, null);

@@ -50,6 +50,16 @@ public class List<T> {
 		return this;
 	}
 
+	public List<T> addAll(T[] objs) {
+		if (objs == null) {
+			throw new IllegalArgumentException("Nao pode adicionar uma lista nula");
+		}
+		for (final T o : objs) {
+			add(o);
+		}
+		return this;
+	}
+
 	public void clear() {
 		elements = new Object[elements.length];
 		current = -1;
