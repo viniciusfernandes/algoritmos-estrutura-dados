@@ -1,5 +1,6 @@
 package br.com.viniciusfernandes.algoritmos.matriz;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Matrix {
@@ -55,6 +56,11 @@ public class Matrix {
 		return s.toString();
 	}
 
+	public List<Matrix> generateSubmatrixes() {
+		final List<Matrix> submatrixes = new ArrayList<>(50);
+		return null;
+	}
+
 	public Matrix remove(int removedRow, int removedCol) {
 		final int newRows = removedRow < 0 ? rows : rows - 1;
 		final int newCols = removedCol < 0 ? cols : cols - 1;
@@ -85,82 +91,98 @@ public class Matrix {
 		return remove(-1, removedCol);
 	}
 
-	private List<int[]> generateAllPermutations() {
-		final int[] rowsIndexes = new int[rows];
-		final int[] colsIndexes = new int[cols];
-
-		for (int i = 0; i < rows; i++) {
-			rowsIndexes[i] = i;
-		}
-		for (int i = 0; i < cols; i++) {
-			colsIndexes[i] = i;
-		}
-
-		return null;
-	}
-
-	public void removeElements(boolean[] removedElements) {
+	public void removeElements(boolean[] removedCols) {
 		int numToRemove = 0;
-		int first = 0;
 		int current = 0;
-		int next = 0;
-		int lastToRemove = 0;
-		int stop = 0;
-		while (++numToRemove <= removedElements.length) {
-			first = 0;
-			current = numToRemove - 1;
-			next = current == 0 ? 0 : current - 1;
-			lastToRemove = removedElements.length - 1;
-			stop = removedElements.length - numToRemove;
+		final int MAX_TO_REMOVE = removedCols.length;
+		while (numToRemove <= MAX_TO_REMOVE) {
+			if (numToRemove == MAX_TO_REMOVE) {
+				print(removedCols);
+				return;
+			}
+			if (numToRemove == 0) {
+				print(removedCols);
+			}
 
-			reset(removedElements, first, numToRemove);
-			print(removedElements);
-			while (true) {
-
-				if (first == stop) {
-					break;
-				}
-				if (current >= lastToRemove) {
-					if (numToRemove == 1 || next < 0) {
-						break;
-					}
-					if (next == first) {
-						first++;
-						current = first + numToRemove - 1;
-						next = current - 1;
-						shift(removedElements, first, numToRemove);
-						print(removedElements);
-						continue;
-					}
-					else {
-						lastToRemove--;
-						current = next;
-						next--;
-					}
-				}
-				else {
-					// Removing elements
-					current++;
-					removedElements[current] = true;
-					removedElements[current - 1] = false;
-					print(removedElements);
-
+			else {
+				current = numToRemove - 1;
+				while (current >= 0) {
+					removeForward(removedCols, 0, current, numToRemove);
+					current--;
 				}
 			}
+
+			numToRemove++;
+			reset(removedCols, numToRemove);
 		}
 	}
 
-	private void reset(boolean[] elements, int first, int numToRemove) {
+	public void removeForward(boolean[] removedCols, int first, int current, int numToRemove) {
+		if (numToRemove == 1) {
+			deafultRemove(removedCols);
+			return;
+		}
+
+		if (first >= removedCols.length - numToRemove) {
+			return;
+		}
+
+		final int last = removedCols.length - 1;
+		int previous = current - 1;
+		int next = previous - 1;
+		while (true) {
+			print(removedCols);
+			if (current >= last && previous >= current - 1) {
+				break;
+			}
+			if (current < last) {
+				removedCols[current] = false;
+				removedCols[++current] = true;
+			}
+			else {
+				previous++;
+				current = previous + 1;
+				shift(removedCols, current, numToRemove);
+			}
+		}
+		if (next < 0) {
+			return;
+		}
+		removedCols[next] = false;
+		next++;
+		previous = next + 1;
+		current = previous + 1;
+		removedCols[next] = removedCols[previous] = removedCols[current] = true;
+		for (int i = current; i <= last; i++) {
+			removedCols[i] = false;
+		}
+
+		removeForward(removedCols, next, current, numToRemove);
+	}
+
+	private void deafultRemove(boolean[] removedCols) {
+		for (int i = 0; i < removedCols.length; i++) {
+			removedCols[i] = true;
+			if (i > 0) {
+				removedCols[i - 1] = false;
+			}
+			print(removedCols);
+		}
+	}
+
+	private void reset(boolean[] removedCols, int numToRemove) {
 		final int last = numToRemove - 1;
-		for (int i = first; i < elements.length; i++) {
-			elements[i] = i <= last;
+		for (int i = 0; i < removedCols.length; i++) {
+			removedCols[i] = i <= last;
 		}
 	}
 
-	private void shift(boolean[] elements, int first, int numToRemove) {
-		final int last = first + numToRemove - 1;
-		for (int i = 0; i < elements.length; i++) {
-			elements[i] = i >= first && i <= last;
+	private void shift(boolean[] removedCols, int current, int numToRemove) {
+		final int last = current;
+		final int init = current - numToRemove + 1;
+		for (int i = 0; i < removedCols.length; i++) {
+			removedCols[i] = i >= init && i <= last;
+
 		}
 	}
 
@@ -182,7 +204,7 @@ public class Matrix {
 		m.set(1, 2, 2);
 
 		final boolean[] b = {
-				false, false, false, false
+				false, false, false
 		};
 		m.removeElements(b);
 	}
