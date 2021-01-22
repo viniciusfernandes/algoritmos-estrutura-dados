@@ -239,17 +239,23 @@ public class Matrix {
 			}
 			copy[i] = elements[i];
 		}
+
+		if (removedElements.totalRemoved >= elements.length) {
+			return;
+		}
 		removedElements.removed = copy;
 		removedElementsBag.add(removedElements);
 	}
 
 	public static void main(String[] args) {
 
-		final Matrix m = new Matrix(2, 2);
+		final Matrix m = new Matrix(2, 3);
 		m.set(0, 0, 1);
 		m.set(0, 1, 2);
-		m.set(1, 0, 3);
-		m.set(1, 1, 4);
+		m.set(0, 2, 3);
+		m.set(1, 0, 4);
+		m.set(1, 1, 5);
+		m.set(1, 2, 6);
 
 		final List<Matrix> submatrixes = m.generateSubmatrixes();
 		for (final Matrix submatrix : submatrixes) {

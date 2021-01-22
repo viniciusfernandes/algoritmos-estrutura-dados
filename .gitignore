@@ -34,3 +34,5 @@ build/
 .openshift-applier/roles
 /hs_err_pid2874.log
 /hs_err_pid22904.log
+/hs_err_pid22427.log
+/hs_err_pid22591.log
