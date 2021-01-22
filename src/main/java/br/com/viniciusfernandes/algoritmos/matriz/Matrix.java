@@ -10,10 +10,18 @@ public class Matrix {
 	private final int cols;
 
 	public Matrix(int rows, int cols) {
-		this.rows = rows;
-		this.cols = cols;
-		matrix = new int[rows][cols];
-		adjoint = new int[cols][rows];
+		if (rows == 0 || cols == 0) {
+			matrix = new int[0][];
+			adjoint = new int[0][];
+			this.rows = 0;
+			this.cols = 0;
+		}
+		else {
+			this.rows = rows;
+			this.cols = cols;
+			matrix = new int[rows][cols];
+			adjoint = new int[cols][rows];
+		}
 	}
 
 	public void set(int row, int col, int value) {
@@ -40,6 +48,9 @@ public class Matrix {
 
 	@Override
 	public String toString() {
+		if (rows == 0 || cols == 0) {
+			return "EMPTY";
+		}
 		final StringBuilder s = new StringBuilder();
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
@@ -58,7 +69,38 @@ public class Matrix {
 
 	public List<Matrix> generateSubmatrixes() {
 		final List<Matrix> submatrixes = new ArrayList<>(50);
-		return null;
+		final List<RemovedElements> removedRows = removeElements(rows);
+		final List<RemovedElements> removedCols = removeElements(cols);
+
+		for (final RemovedElements removedRow : removedRows) {
+			for (final RemovedElements removedCol : removedCols) {
+				submatrixes.add(remove(removedRow, removedCol));
+			}
+		}
+		return submatrixes;
+	}
+
+	private Matrix remove(RemovedElements removedRows, RemovedElements removedCols) {
+		final Matrix m = new Matrix(rows - removedRows.totalRemoved, cols - removedCols.totalRemoved);
+
+		int mRow = 0;
+		int mCol = 0;
+		for (int row = 0; row < rows; row++) {
+			if (removedRows.removed[row]) {
+				continue;
+			}
+
+			mCol = 0;
+			for (int col = 0; col < cols; col++) {
+				if (removedCols.removed[col]) {
+					continue;
+				}
+				m.set(mRow, mCol, matrix[row][col]);
+				mCol++;
+			}
+			mRow++;
+		}
+		return m;
 	}
 
 	public Matrix remove(int removedRow, int removedCol) {
@@ -91,32 +133,37 @@ public class Matrix {
 		return remove(-1, removedCol);
 	}
 
-	public void removeElements(boolean[] removedCols) {
+	private List<RemovedElements> removeElements(int totalElements) {
+		final boolean[] removedElements = new boolean[totalElements];
+		final List<RemovedElements> removedElementsBag = new ArrayList<>(50);
+
 		int numToRemove = 0;
 		int current = 0;
-		final int MAX_TO_REMOVE = removedCols.length;
+		final int MAX_TO_REMOVE = removedElements.length;
 		while (numToRemove <= MAX_TO_REMOVE) {
 			if (numToRemove == MAX_TO_REMOVE) {
-				print(removedCols);
-				return;
+				addRemovedElements(removedElements, removedElementsBag);
+				return removedElementsBag;
 			}
 			if (numToRemove == 0) {
-				print(removedCols);
+				addRemovedElements(removedElements, removedElementsBag);
 			}
 
 			else {
 				current = numToRemove - 1;
-				removeForward(removedCols, 0, current, numToRemove);
+				removeForward(removedElements, removedElementsBag, 0, current, numToRemove);
 			}
 
 			numToRemove++;
-			reset(removedCols, numToRemove);
+			reset(removedElements, numToRemove);
 		}
+		return removedElementsBag;
 	}
 
-	public void removeForward(boolean[] removedCols, int first, int current, int numToRemove) {
+	public void removeForward(boolean[] removedCols, List<RemovedElements> removedElementsBag, int first, int current,
+			int numToRemove) {
 		if (numToRemove == 1) {
-			deafultRemove(removedCols);
+			deafultRemove(removedCols, removedElementsBag);
 			return;
 		}
 
@@ -128,7 +175,7 @@ public class Matrix {
 		int previous = current - 1;
 		int next = previous - 1;
 		while (true) {
-			print(removedCols);
+			addRemovedElements(removedCols, removedElementsBag);
 			if (current >= last && previous >= current - 1) {
 				break;
 			}
@@ -154,16 +201,16 @@ public class Matrix {
 			removedCols[i] = false;
 		}
 
-		removeForward(removedCols, next, current, numToRemove);
+		removeForward(removedCols, removedElementsBag, next, current, numToRemove);
 	}
 
-	private void deafultRemove(boolean[] removedCols) {
+	private void deafultRemove(boolean[] removedCols, List<RemovedElements> removedElementsBag) {
 		for (int i = 0; i < removedCols.length; i++) {
 			removedCols[i] = true;
 			if (i > 0) {
 				removedCols[i - 1] = false;
 			}
-			print(removedCols);
+			addRemovedElements(removedCols, removedElementsBag);
 		}
 	}
 
@@ -183,27 +230,36 @@ public class Matrix {
 		}
 	}
 
-	private void print(boolean[] elements) {
+	private void addRemovedElements(boolean[] elements, List<RemovedElements> removedElementsBag) {
+		final RemovedElements removedElements = new RemovedElements();
+		final boolean[] copy = new boolean[elements.length];
 		for (int i = 0; i < elements.length; i++) {
-			System.out.print(elements[i] + " ");
+			if (elements[i]) {
+				removedElements.totalRemoved++;
+			}
+			copy[i] = elements[i];
 		}
-		System.out.println();
+		removedElements.removed = copy;
+		removedElementsBag.add(removedElements);
 	}
 
 	public static void main(String[] args) {
 
-		final Matrix m = new Matrix(2, 3);
+		final Matrix m = new Matrix(2, 2);
 		m.set(0, 0, 1);
 		m.set(0, 1, 2);
-		m.set(0, 2, 2);
 		m.set(1, 0, 3);
 		m.set(1, 1, 4);
-		m.set(1, 2, 2);
 
-		final boolean[] b = {
-				false, false, false, false
-		};
-		m.removeElements(b);
+		final List<Matrix> submatrixes = m.generateSubmatrixes();
+		for (final Matrix submatrix : submatrixes) {
+			System.out.println(submatrix.toString() + "\n");
+		}
+	}
+
+	private class RemovedElements {
+		int totalRemoved;
+		boolean[] removed;
 	}
 
 }
