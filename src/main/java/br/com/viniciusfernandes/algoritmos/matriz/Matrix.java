@@ -106,10 +106,7 @@ public class Matrix {
 
 			else {
 				current = numToRemove - 1;
-				while (current >= 0) {
-					removeForward(removedCols, 0, current, numToRemove);
-					current--;
-				}
+				removeForward(removedCols, 0, current, numToRemove);
 			}
 
 			numToRemove++;
@@ -204,7 +201,7 @@ public class Matrix {
 		m.set(1, 2, 2);
 
 		final boolean[] b = {
-				false, false, false
+				false, false, false, false
 		};
 		m.removeElements(b);
 	}
